@@ -33,18 +33,20 @@ def creerFenetre():
     def creerComboboxMatiere():
         return ttk.Combobox(values = matieres, state = 'normal')
     def grille(widget, r, c):
-        widget.grid(sticky="ew", row=r, column=c, padx=3, pady=6)
+        widget.grid(sticky='nsew', row=r, column=c, padx=12, pady=12)
         
     root = tk.Tk();
     root.title("ED++")
-    root.geometry('480x640')
+    root.geometry('700x175')
+    root.resizable(True, False)
     root.iconbitmap("icon.ico")
     
     for i in range(4):
         root.rowconfigure(i, weight=1)
+        
     for i in range(2):
         root.columnconfigure(i, weight=1)
-        
+    
     nem = creerComboboxEleve()
     grille(nem, 0, 0)
     grille(ttk.Button(text="Note d’un élève pour une matière", command=lambda: NEM(eleves[nem.current()])), 0, 1)
