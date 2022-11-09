@@ -78,9 +78,9 @@ def MNM(matiere: Matiere):
     for evaluation in evals:
         for eleve in eleves:
             # Obtient la valeur de la note de l'élève dans l'évaluation
-            cur.execute(f'SELECT valeur FROM NOTES where id_eleve={eleve.id} AND id_evaluation={evaluation.id}')
-            # Il n'y a qu'un seul résultat. On divise par noteMax pour obtenir la note sur 1.
-            moyennes[eleve] += cur.fetchone()[0] / evaluation.noteMax * evaluation.coef
+            note = cur.execute(f'SELECT valeur FROM NOTES where id_eleve={eleve.id} AND id_evaluation={evaluation.id}').fetchone()[0]
+            # On divise par noteMax pour obtenir la note sur 1.
+            moyennes[eleve] += note / evaluation.noteMax * evaluation.coef
     
     # On calcule la moyenne pondérée en divisant par la somme des coefficients.
     sommeCoefs = sum((evaluation.coef for evaluation in evals))
@@ -90,6 +90,9 @@ def MNM(matiere: Matiere):
     for eleve in eleves:
         moyennes[eleve] /= sommeCoefs 
     return dict(moyennes)
+
+def NEM(eleve: Eleve, matiere: Matiere):
+    pass
 
 def getEvaluations(matiere):
     return [Evaluation(t[0],
