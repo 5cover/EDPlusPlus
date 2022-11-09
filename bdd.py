@@ -46,7 +46,7 @@ def MEM(eleve: Eleve):
     matieres = [Matiere(*t) for t in cur.execute(f'SELECT DISTINCT MATIERES.* FROM COURS\
                                                    INNER JOIN MATIERES on MATIERES.id = id_matiere\
                                                    WHERE id_eleve = {eleve.id}').fetchall()]
-
+    
     moyennes = defaultdict(float)
     
     for matiere in matieres: # SELECTION DE CHAQUE MATIERE
@@ -63,12 +63,12 @@ def MEM(eleve: Eleve):
 def MNM(matiere: Matiere):
     """ Retour : dictionnaire (dict)
             clés : élèves
-            valeurs : moyenne sur 1 """
+            valeurs : moyenne sur 1
+            OU None si aucune évaluation dans matière"""
     
     eleves = [Eleve(*t) for t in cur.execute(f'SELECT DISTINCT ELEVES.* FROM COURS\
                                                INNER JOIN ELEVES on ELEVES.id = id_eleve\
                                                WHERE id_matiere = {matiere.id}').fetchall()]
-    
     evals = getEvaluations(matiere)
     
     # Dictionnaire avec valeur par défaut (0) pour les clés inconnues
@@ -84,9 +84,11 @@ def MNM(matiere: Matiere):
     
     # On calcule la moyenne pondérée en divisant par la somme des coefficients.
     sommeCoefs = sum((evaluation.coef for evaluation in evals))
+    if (sommeCoefs == 0):
+        # Retourner None si il n'y a pas d'évaluation
+        return None
     for eleve in eleves:
-        moyennes[eleve] /= sommeCoefs
-    
+        moyennes[eleve] /= sommeCoefs 
     return dict(moyennes)
 
 def getEvaluations(matiere):

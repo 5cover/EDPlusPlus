@@ -9,7 +9,7 @@ def creerFenetre():
     def MEM(eleve: bdd.Eleve):
         """ Affiche le graphique MEM. """
         res = bdd.MEM(eleve)
-        plt.bar([key.nomCourt for key in res.keys()], [val * NOTE_MAX for val in res.values()])
+        plt.bar([key.nomCourt for key in res.keys()], [val * NOTE_MAX for val in res.values()], 0.5)
         plt.suptitle(f"Moyennes de {eleve}")
         plt.xticks(rotation='30')
         plt.show()
@@ -17,8 +17,13 @@ def creerFenetre():
     def MNM(matiere: bdd.Matiere):
         """ Affiche le graphique MNM. """
         res = bdd.MNM(matiere)
-        plt.bar(res.keys(), [val * NOTE_MAX for val in res.values()])
+        print(res)
+        if (res is None):
+            plt.figure() # graphique vide
+        else:
+            plt.bar([str(key) for key in res.keys()], [val * NOTE_MAX for val in res.values()], 0.5)
         plt.suptitle(f"Moyennes en {matiere}")
+        plt.xticks(rotation='vertical')
         plt.show()
         
     def NEM(eleve: bdd.Eleve):
